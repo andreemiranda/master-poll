@@ -1,0 +1,47 @@
+# netlify.toml — Deploy no Netlify
+# Site: https://master-poll.netlify.app
+#
+# Uso:
+#   1. netlify.com -> New site -> Import from Git -> selecione o repo
+#   2. Site settings -> Domain management -> Change site name -> master-poll
+#   3. O Netlify detecta este arquivo automaticamente
+
+[build]
+  base    = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # VITE_API_URL e lida do .env.production em build time.
+  # Para sobrescrever: Site settings -> Environment variables
+
+# SPA — redireciona todas as rotas para index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options           = "DENY"
+    X-Content-Type-Options    = "nosniff"
+    X-XSS-Protection          = "1; mode=block"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Content-Security-Policy   = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://master-poll.onrender.com https://api.ipify.org https://api64.ipify.org; font-src 'self' data:; frame-ancestors 'none';"
+
+# Cache agressivo para assets versionados pelo Vite
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Sem cache para index.html
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

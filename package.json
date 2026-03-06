@@ -1,0 +1,19 @@
+{
+  "name": "enquete-eleitoral",
+  "version": "1.0.0",
+  "description": "Enquete Eleitoral — fullstack Node.js/React/TypeScript",
+  "private": true,
+  "engines": { "node": ">=20.0.0" },
+  "scripts": {
+    "install:all":  "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev":          "concurrently -n BACK,FRONT -c blue,green \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "build":        "cd backend && npm run build && cd ../frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "typecheck":    "cd backend && npm run typecheck && cd ../frontend && npx tsc --noEmit",
+    "start":        "cd backend && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

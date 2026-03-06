@@ -1,0 +1,52 @@
+# render.yaml — Deploy no Render.com
+# Servico: https://master-poll.onrender.com
+#
+# Uso via Blueprint (recomendado):
+#   1. Suba o repo para o GitHub
+#   2. render.com -> New -> Blueprint -> conecte o repo
+#   3. Apos criar: painel -> Environment -> defina ADMIN_PASSWORD e SUPERUSER_PASSWORD
+#
+# Uso manual (Dashboard):
+#   Root Directory: backend | Build: npm ci && npm run build | Start: npm start
+
+services:
+  - type: web
+    name: master-poll
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /health
+
+    # Disco persistente (opcional, requer plano pago):
+    # disk:
+    #   name: master-poll-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: CORS_ORIGIN
+        value: https://master-poll.netlify.app
+
+      # Plano free: /tmp (reinicia a cada deploy)
+      # Plano pago com disco: /var/data
+      - key: DATA_DIR
+        value: /tmp/master-poll-data
+
+      # JWT_SECRET gerado automaticamente pelo Render
+      - key: JWT_SECRET
+        generateValue: true
+
+      # Senhas — defina no painel ANTES do primeiro deploy
+      # render.com -> master-poll -> Environment -> Add variable
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      - key: SUPERUSER_PASSWORD
+        sync: false

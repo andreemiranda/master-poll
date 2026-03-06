@@ -1,0 +1,2 @@
+# SPA fallback — Netlify lê este arquivo caso netlify.toml não esteja presente
+/*    /index.html   200
